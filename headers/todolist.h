@@ -37,15 +37,11 @@ typedef struct{
 
 ListeTaches* creerListeTaches();
 void ajouterTache(ListeTaches *liste, Tache *tache);
-
 int comparerTaches(const void *a, const void *b);
 void afficherTaches(ListeTaches *liste);
-
 void retirerTachesTerminees(ListeTaches *liste);
-
 void mettreAJourTaches(ListeTaches *liste);
-void commencerTachesEnAttente(ListeTaches *liste);
-
+void libererListeTaches(ListeTaches *liste);
 Tache *creerTache(char *nom, int joursPourTerminer);
 
 #endif

@@ -6,13 +6,11 @@ int main()
 
     while (1)
     {
-        printf("\nMenu:\n");
+        printf("\n===== Menu =====\n");
         printf("1. Ajouter une tache\n");
         printf("2. Afficher les taches\n");
-        printf("3. Mettre a jour les taches\n");
-        printf("4. Commencer les taches en attente\n");
-        printf("5. Retirer les taches terminees\n");
-        printf("6. Quitter\n");
+        printf("3. Retirer les taches terminees\n");
+        printf("4. Quitter\n");
         printf("Choisissez une option: ");
 
         int choix;
@@ -24,28 +22,26 @@ int main()
         {
             char nom[100];
             int joursPourTerminer;
+            printf("\n===== Ajouter une tache =====\n");
             printf("Entrez le nom de la tache: ");
             scanf("%s", nom);
             printf("Entrez le nombre de jours pour terminer la tache: ");
             scanf("%d", &joursPourTerminer);
             Tache *tache = creerTache(nom, joursPourTerminer);
             ajouterTache(liste, tache);
-            commencerTachesEnAttente(liste); // Ajoutez cette ligne
+            mettreAJourTaches(liste);
             break;
         }
         case 2:
+            printf("\n===== Afficher les taches =====\n");
             afficherTaches(liste);
             break;
         case 3:
-            mettreAJourTaches(liste);
-            break;
-        case 4:
-            commencerTachesEnAttente(liste);
-            break;
-        case 5:
+            printf("\n===== Taches terminees retiree =====\n");
             retirerTachesTerminees(liste);
             break;
-        case 6:
+        case 4:
+            libererListeTaches(liste);
             return 0;
         default:
             printf("Option non valide. Veuillez choisir une option entre 1 et 6.\n");

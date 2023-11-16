@@ -9,24 +9,15 @@ ListeTaches* creerListeTaches() {
 
 void ajouterTache(ListeTaches* liste, Tache* tache) {
     liste->taches = (Tache**)realloc(liste->taches, (liste->nombreDeTaches + 1) * sizeof(Tache*));
-    liste->taches[liste->nombreDeTaches] = tache;
-    liste->nombreDeTaches++;
+    liste->taches[liste->nombreDeTaches++] = tache;
+
+    mettreAJourTaches(liste);
 }
 
 int comparerTaches(const void* a, const void* b) {
     Tache* tacheA = *(Tache**)a;
     Tache* tacheB = *(Tache**)b;
     return tacheA->jourPourTerminer - tacheB->jourPourTerminer;
-}
-
-int compterTachesEnCours(ListeTaches* liste) {
-    int compteur = 0;
-    for (int i = 0; i < liste->nombreDeTaches; i++) {
-        if (liste->taches[i]->statut == EN_COURS) {
-            compteur++;
-        }
-    }
-    return compteur;
 }
 
 void afficherTaches(ListeTaches* liste) {
@@ -46,39 +37,35 @@ void retirerTachesTerminees(ListeTaches* liste) {
     for (int i = 0; i < liste->nombreDeTaches; i++) {
         if (liste->taches[i]->statut == TERMINE) {
             free(liste->taches[i]);
-            for (int j = i; j < liste->nombreDeTaches - 1; j++) {
-                liste->taches[j] = liste->taches[j + 1];
-            }
-            liste->nombreDeTaches--;
-            i--;         }
+            liste->taches[i] = liste->taches[--liste->nombreDeTaches];
+        }
     }
 }
+
 void mettreAJourTaches(ListeTaches* liste) {
+    // Obtenir la date actuelle
+    time_t maintenant = time(NULL);
+
+    // Trier les tâches par le nombre de jours pour terminer
+    qsort(liste->taches, liste->nombreDeTaches, sizeof(Tache*), comparerTaches);
+
+    // Mettre à jour le statut des tâches
+    int tachesEnCours = 0;
     for (int i = 0; i < liste->nombreDeTaches; i++) {
-        if (liste->taches[i]->statut == EN_COURS) {
-            liste->taches[i]->jourPourTerminer--;
+        // Calculer le nombre de jours depuis la création de la tâche
+        double joursDepuisCreation = difftime(maintenant, liste->taches[i]->dateCreation) / (60 * 60 * 24);
 
-            if (liste->taches[i]->jourPourTerminer == 0) {
-                liste->taches[i]->statut = TERMINE;
-            }
-        }
-    }
-}
+        // Mettre à jour le nombre de jours pour terminer
+        liste->taches[i]->jourPourTerminer -= (int)joursDepuisCreation;
 
-void commencerTachesEnAttente(ListeTaches* liste) {
-    int nombreTachesEnCours = 0;
-
-    for (int i = 0; i < liste->nombreDeTaches; i++) {
-        if (liste->taches[i]->statut == EN_COURS) {
-            nombreTachesEnCours++;
-        }
-    }
-    if (nombreTachesEnCours < 5) {
-        for (int i = 0; i < liste->nombreDeTaches && nombreTachesEnCours < 5; i++) {
-            if (liste->taches[i]->statut == EN_ATTENTE) {
-                liste->taches[i]->statut = EN_COURS;
-                nombreTachesEnCours++;
-            }
+        // Mettre à jour le statut de la tâche
+        if (liste->taches[i]->jourPourTerminer <= 0) {
+            liste->taches[i]->statut = TERMINE;
+        } else if (tachesEnCours < 5) {
+            liste->taches[i]->statut = EN_COURS;
+            tachesEnCours++;
+        } else {
+            liste->taches[i]->statut = EN_ATTENTE;
         }
     }
 }
@@ -90,4 +77,12 @@ Tache* creerTache(char* nom, int joursPourTerminer) {
     tache->statut = EN_ATTENTE;
     tache->jourPourTerminer = joursPourTerminer;
     return tache;
+}
+
+void libererListeTaches(ListeTaches* liste) {
+    for (int i = 0; i < liste->nombreDeTaches; i++) {
+        free(liste->taches[i]);
+    }
+    free(liste->taches);
+    free(liste);
 }
