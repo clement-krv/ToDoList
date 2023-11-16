@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "**.*.twig": "twig",
+        ".c": "c",
+        ".C": "c",
+        "todolist.C": "cpp"
+    }
+}
