@@ -1,5 +1,7 @@
 #include "headers/todolist.h"
 
+
+//Fonction qui permet de créer une liste de tâches
 ListeTaches* creerListeTaches() {
     ListeTaches* liste = (ListeTaches*)malloc(sizeof(ListeTaches));
     liste->taches = NULL;
@@ -7,19 +9,23 @@ ListeTaches* creerListeTaches() {
     return liste;
 }
 
+//Fonction qui permet d'ajouter une tâche à la liste de tâches
 void ajouterTache(ListeTaches* liste, Tache* tache) {
     liste->taches = (Tache**)realloc(liste->taches, (liste->nombreDeTaches + 1) * sizeof(Tache*));
     liste->taches[liste->nombreDeTaches++] = tache;
 
+    //Appel de la fonction mettreAJourTaches
     mettreAJourTaches(liste);
 }
 
+//Fonction qui compare les tâches par rapport a leur nombre de jours pour terminer et les trie en ordre croissant
 int comparerTaches(const void* a, const void* b) {
     Tache* tacheA = *(Tache**)a;
     Tache* tacheB = *(Tache**)b;
     return tacheA->jourPourTerminer - tacheB->jourPourTerminer;
 }
 
+//Fonction qui affiche les tâches
 void afficherTaches(ListeTaches* liste) {
     qsort(liste->taches, liste->nombreDeTaches, sizeof(Tache*), comparerTaches);
 
@@ -33,6 +39,7 @@ void afficherTaches(ListeTaches* liste) {
     }
 }
 
+//Fonction qui permet de retirer une tâche de la liste de tâches quand son statut est TERMINE
 void retirerTachesTerminees(ListeTaches* liste) {
     for (int i = 0; i < liste->nombreDeTaches; i++) {
         if (liste->taches[i]->statut == TERMINE) {
@@ -42,6 +49,7 @@ void retirerTachesTerminees(ListeTaches* liste) {
     }
 }
 
+//Fonction qui permet de mettre à jour les tâches
 void mettreAJourTaches(ListeTaches* liste) {
     // Obtenir la date actuelle
     time_t maintenant = time(NULL);
@@ -70,6 +78,7 @@ void mettreAJourTaches(ListeTaches* liste) {
     }
 }
 
+//Fonction qui permet de créer une tâche
 Tache* creerTache(char* nom, int joursPourTerminer) {
     Tache* tache = (Tache*)malloc(sizeof(Tache));
     tache->nom = strdup(nom);
@@ -79,6 +88,7 @@ Tache* creerTache(char* nom, int joursPourTerminer) {
     return tache;
 }
 
+//Fonction qui permet de libérer la mémoire de la liste de tâches
 void libererListeTaches(ListeTaches* liste) {
     for (int i = 0; i < liste->nombreDeTaches; i++) {
         free(liste->taches[i]);

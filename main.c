@@ -1,5 +1,6 @@
 #include "headers/todolist.h"
 
+//Fonction main qui prend en compte une interface utilisateur pour ajouter des taches, les afficher et les retirer
 int main()
 {
     ListeTaches *liste = creerListeTaches();
