@@ -18,7 +18,7 @@ Pour compiler et exécuter ce projet, vous aurez besoin d'un compilateur C. Si v
 Une fois que vous avez un compilateur C installé, vous pouvez compiler le projet en utilisant la commande suivante :
 
 ```bash
-gcc -o main.exe .\test.c .\todolist.c
+gcc -o main.exe .\main.c .\todolist.c
 ```
 
 ## Exécution
