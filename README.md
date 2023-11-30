@@ -8,6 +8,7 @@ Ce projet a été réalisé en binôme dans le cadre de nos études à l'[ESGI](
 - Supprimer une tâche
 - Met les 5 tâches les plus urgentes en haut de la liste et en statut "en cours"
 - Décrémente le nombre de jour pour terminer par rapport a la date du jour et de création de la tâche
+- Pour voir les tâche veuillez aller dans le dossier *"taches"* et ouvrir le fichier qui porte le nom d'utilisateur, les taches sont enregistrer dans ce fichier.
 
 ## Prérequis
 
