@@ -49,7 +49,7 @@ int main()
             printf("\n===== Modifier le statut d'une tache =====\n");
             printf("Entrez le nom de la tache: ");
             scanf("%s", nom);
-            printf("Entrez le nouveau statut de la tache (0 = non commencee, 1 = en cours, 2 = terminee): ");
+            printf("Entrez le nouveau statut de la tache (0 = en attente, 1 = en cours, 2 = terminee): ");
             scanf("%d", &nouveauStatut);
             modifierTache(liste, nom, nouveauStatut);
             break;

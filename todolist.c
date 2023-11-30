@@ -179,20 +179,29 @@ void retirerTachesTerminees(ListeTaches* liste) {
 void ecrireTachesDansFichier(ListeTaches* liste, FILE* fichier) {
     qsort(liste->taches, liste->nombreDeTaches, sizeof(Tache*), comparerTaches);
 
+    int tachesEnCours = 0;
     for (int i = 0; i < liste->nombreDeTaches; i++) {
         Tache* tache = liste->taches[i];
-        fprintf(fichier, "{\n"); // Ajoutez cette ligne
+        fprintf(fichier, "{\n");
         fprintf(fichier, "Nom: %s\n", tache->nom);
         
         char buffer[80];
         struct tm * timeinfo;
         timeinfo = localtime(&(tache->dateCreation));
-        strftime(buffer, 80, "%c", timeinfo); // Utilisez %c pour le format de date/heure local
+        strftime(buffer, 80, "%c", timeinfo);
         fprintf(fichier, "Date de creation: %s\n", buffer);
 
-        fprintf(fichier, "Statut: %s\n", tache->statut == EN_ATTENTE ? "En attente" : tache->statut == EN_COURS ? "En cours" : "Terminee");
+        // Utilisez la même logique pour le statut de la tâche
+        if (tache->statut == TERMINE) {
+            fprintf(fichier, "Statut: Terminee\n");
+        } else if (tachesEnCours < 5) {
+            fprintf(fichier, "Statut: En cours\n");
+            tachesEnCours++;
+        } else {
+            fprintf(fichier, "Statut: En attente\n");
+        }
         fprintf(fichier, "Jours pour terminer: %d\n", tache->jourPourTerminer);
-        fprintf(fichier, "}\n\n"); // Ajoutez cette ligne
+        fprintf(fichier, "}\n\n");
     }
 }
 
