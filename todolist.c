@@ -95,6 +95,7 @@ void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
     {
         tache->statut = TERMINE;
     }
+    // Si le statut est 1, définir le statut sur EN_COURS
     else if (tache->statut == 1)
     {
         tache->statut = EN_COURS;
@@ -105,11 +106,23 @@ void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
     liste->taches[liste->nombreDeTaches] = tache;
     liste->nombreDeTaches++;
 
-    // Ouvrir le fichier en mode écriture
-    FILE *fichier = fopen(nomFichier, "w");
+    // Vérifier si le fichier existe
+    FILE *fichier = fopen(nomFichier, "r");
     if (fichier != NULL)
     {
-        // Écrire les tâches dans le fichier
+        // Le fichier existe, fermer le fichier et l'ouvrir en mode append
+        fclose(fichier);
+        fichier = fopen(nomFichier, "a");
+    }
+    else
+    {
+        // Le fichier n'existe pas, l'ouvrir en mode écriture
+        fichier = fopen(nomFichier, "w");
+    }
+
+    if (fichier != NULL)
+    {
+        // Écrire la tâche dans le fichier
         ecrireTachesDansFichier(liste, fichier);
 
         // Fermer le fichier
