@@ -75,6 +75,11 @@ void ajouterTacheSansEcrireDansFichier(ListeTaches *liste, Tache *tache)
     {
         tache->statut = TERMINE;
     }
+    // Si le statut est 1, définir le statut sur EN_COURS
+    else if (tache->statut == 1)
+    {
+        tache->statut = EN_COURS;
+    }
 
     // Ajouter la tâche à la liste
     liste->taches = (Tache **)realloc(liste->taches, sizeof(Tache *) * (liste->nombreDeTaches + 1));
@@ -89,6 +94,10 @@ void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
     if (tache->jourPourTerminer == 0)
     {
         tache->statut = TERMINE;
+    }
+    else if (tache->statut == 1)
+    {
+        tache->statut = EN_COURS;
     }
 
     // Ajouter la tâche à la liste
@@ -261,6 +270,9 @@ void mettreAJourTaches(ListeTaches *liste)
         {
             liste->taches[i]->statut = EN_ATTENTE;
         }
+
+        // Mettre à jour la date de création de la tâche
+        liste->taches[i]->dateCreation = maintenant;
     }
 }
 
