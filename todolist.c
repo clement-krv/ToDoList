@@ -1,6 +1,5 @@
 #include "headers/todolist.h"
 
-// Fonction qui permet de créer une liste de tâches
 ListeTaches *creerListeTaches()
 {
     ListeTaches *liste = (ListeTaches *)malloc(sizeof(ListeTaches));
@@ -11,7 +10,6 @@ ListeTaches *creerListeTaches()
     return liste;
 }
 
-// Fonction qui permet d'ajouter une tâche à une liste de tâches
 void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
 {
     if (liste == NULL || tache == NULL) {
@@ -143,6 +141,16 @@ void modifierTache(ListeTaches *liste, char *nom, StatutTache nouveauStatut, cha
     while (courante != NULL) {
         if (strcmp(courante->nom, nom) == 0) {
             courante->statut = nouveauStatut;
+
+            // Réécrire la liste mise à jour dans le fichier
+            FILE *fichier = fopen(nomFichier, "w");
+            if (fichier != NULL) {
+                ecrireTachesDansFichier(liste, fichier);
+                fclose(fichier);
+            } else {
+                printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
+            }
+
             return;
         }
         courante = courante->suivant;
