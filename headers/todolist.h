@@ -46,6 +46,7 @@ void ecrireTachesDansFichier(ListeTaches *liste, FILE *fichier);
 void trierTachesParDate(ListeTaches *liste);
 void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut, char *nomFichier);
 void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier, char *nomFichier);
+void ajouterTacheSansEcrireDansFichier(ListeTaches *liste, Tache *tache);
 Tache *creerTache(char *nom, int joursPourTerminer);
 
 #endif

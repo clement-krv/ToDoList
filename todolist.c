@@ -64,20 +64,40 @@ void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier, char *nomFichier
         tache->jourPourTerminer = jourPourTerminer;
 
         // Ajouter la tâche à la liste
-        ajouterTache(liste, tache, nomFichier);
+        ajouterTacheSansEcrireDansFichier(liste, tache);
     }
+}
+
+void ajouterTacheSansEcrireDansFichier(ListeTaches *liste, Tache *tache)
+{
+    // Si jourPourTerminer est 0, définir le statut sur TERMINE
+    if (tache->jourPourTerminer == 0)
+    {
+        tache->statut = TERMINE;
+    }
+
+    // Ajouter la tâche à la liste
+    liste->taches = (Tache **)realloc(liste->taches, sizeof(Tache *) * (liste->nombreDeTaches + 1));
+    liste->taches[liste->nombreDeTaches] = tache;
+    liste->nombreDeTaches++;
 }
 
 // Fonction qui permet d'ajouter une tâche à la liste de tâches
 void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
 {
+    // Si jourPourTerminer est 0, définir le statut sur TERMINE
+    if (tache->jourPourTerminer == 0)
+    {
+        tache->statut = TERMINE;
+    }
+
     // Ajouter la tâche à la liste
     liste->taches = (Tache **)realloc(liste->taches, sizeof(Tache *) * (liste->nombreDeTaches + 1));
     liste->taches[liste->nombreDeTaches] = tache;
     liste->nombreDeTaches++;
 
     // Ouvrir le fichier en mode écriture
-    FILE *fichier = fopen(nomFichier, "a");
+    FILE *fichier = fopen(nomFichier, "w");
     if (fichier != NULL)
     {
         // Écrire les tâches dans le fichier
