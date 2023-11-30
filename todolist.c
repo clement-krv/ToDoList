@@ -176,6 +176,26 @@ void retirerTachesTerminees(ListeTaches* liste) {
     fclose(fichier);
 }
 
+void ecrireTachesDansFichier(ListeTaches* liste, FILE* fichier) {
+    qsort(liste->taches, liste->nombreDeTaches, sizeof(Tache*), comparerTaches);
+
+    for (int i = 0; i < liste->nombreDeTaches; i++) {
+        Tache* tache = liste->taches[i];
+        fprintf(fichier, "{\n"); // Ajoutez cette ligne
+        fprintf(fichier, "Nom: %s\n", tache->nom);
+        
+        char buffer[80];
+        struct tm * timeinfo;
+        timeinfo = localtime(&(tache->dateCreation));
+        strftime(buffer, 80, "%c", timeinfo); // Utilisez %c pour le format de date/heure local
+        fprintf(fichier, "Date de creation: %s\n", buffer);
+
+        fprintf(fichier, "Statut: %s\n", tache->statut == EN_ATTENTE ? "En attente" : tache->statut == EN_COURS ? "En cours" : "Terminee");
+        fprintf(fichier, "Jours pour terminer: %d\n", tache->jourPourTerminer);
+        fprintf(fichier, "}\n\n"); // Ajoutez cette ligne
+    }
+}
+
 //Fonction qui permet de mettre à jour les tâches
 void mettreAJourTaches(ListeTaches* liste) {
     // Obtenir la date actuelle

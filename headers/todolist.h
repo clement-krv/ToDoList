@@ -43,6 +43,7 @@ void retirerTachesTerminees(ListeTaches *liste);
 void mettreAJourTaches(ListeTaches *liste);
 void libererListeTaches(ListeTaches *liste);
 
+void ecrireTachesDansFichier(ListeTaches *liste, FILE *fichier);
 void trierTachesParDate(ListeTaches *liste);
 void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut);
 void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier);
