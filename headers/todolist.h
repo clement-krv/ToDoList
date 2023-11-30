@@ -40,5 +40,8 @@ void ecrireTachesDansFichier(ListeTaches *liste, FILE *fichier);
 void mettreAJourTaches(ListeTaches *liste);
 Tache *creerTache(char *nom, int joursPourTerminer);
 void libererListeTaches(ListeTaches *liste);
+int comparerTachesParJoursPourTerminer(const void *a, const void *b);
+void trierTachesParJours(ListeTaches *liste);
+void mettreAJourStatutsTaches(ListeTaches *liste);
 
 #endif

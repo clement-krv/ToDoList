@@ -10,47 +10,24 @@ ListeTaches *creerListeTaches()
     return liste;
 }
 
-void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
-{
-    if (liste == NULL || tache == NULL) {
-        printf("Liste ou tache non valide.\n");
-        return;
-    }
-
-    if (liste->tete == NULL) {
+void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier) {
+    // Ajouter la tâche à la liste
+    if (liste->nombreDeTaches == 0) {
         liste->tete = tache;
         liste->queue = tache;
     } else {
         liste->queue->suivant = tache;
         liste->queue = tache;
     }
-    tache->suivant = NULL;
-
     liste->nombreDeTaches++;
 
-    FILE *fichier = fopen(nomFichier, "a");
+    // Mettre à jour les statuts des tâches
+    mettreAJourStatutsTaches(liste);
+
+    // Écrire les tâches dans le fichier
+    FILE *fichier = fopen(nomFichier, "w");
     if (fichier != NULL) {
-        // Écrire la tâche dans le fichier
-        fprintf(fichier, "{\n");
-        fprintf(fichier, "Nom: %s\n", tache->nom);
-
-        char buffer[80];
-        struct tm *timeinfo;
-        timeinfo = localtime(&(tache->dateCreation));
-        strftime(buffer, 80, "%c", timeinfo);
-        fprintf(fichier, "Date de creation: %s\n", buffer);
-
-        // Utilisez la même logique pour le statut de la tâche
-        if (tache->statut == TERMINE) {
-            fprintf(fichier, "Statut: Terminee\n");
-        } else if (tache->statut == EN_COURS) {
-            fprintf(fichier, "Statut: En cours\n");
-        } else {
-            fprintf(fichier, "Statut: En attente\n");
-        }
-        fprintf(fichier, "Jours pour terminer: %d\n", tache->jourPourTerminer);
-        fprintf(fichier, "}\n\n");
-
+        ecrireTachesDansFichier(liste, fichier);
         fclose(fichier);
     } else {
         printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
@@ -322,4 +299,60 @@ void libererListeTaches(ListeTaches *liste)
     liste->nombreDeTaches = 0;
 
     free(liste);
+}
+
+void mettreAJourStatutsTaches(ListeTaches *liste) {
+    // Trier les tâches par le nombre de jours pour terminer
+    // Note : Vous devrez implémenter cette fonction vous-même
+    trierTachesParJours(liste);
+
+    // Mettre à jour le statut des tâches
+    int tachesEnCours = 0;
+    Tache *courante = liste->tete;
+    while (courante != NULL) {
+        if (courante->jourPourTerminer <= 0) {
+            courante->statut = TERMINE;
+        } else if (tachesEnCours < 5) {
+            courante->statut = EN_COURS;
+            tachesEnCours++;
+        } else {
+            courante->statut = EN_ATTENTE;
+        }
+        courante = courante->suivant;
+    }
+}
+
+void trierTachesParJours(ListeTaches *liste) {
+    // Convertir la liste chaînée en un tableau
+    Tache **taches = malloc(sizeof(Tache *) * liste->nombreDeTaches);
+    Tache *courante = liste->tete;
+    for (int i = 0; i < liste->nombreDeTaches; i++) {
+        taches[i] = courante;
+        courante = courante->suivant;
+    }
+
+    // Trier le tableau
+    qsort(taches, liste->nombreDeTaches, sizeof(Tache *), comparerTachesParJoursPourTerminer);
+
+    // Convertir le tableau en une liste chaînée
+    for (int i = 0; i < liste->nombreDeTaches; i++) {
+        if (i == 0) {
+            liste->tete = taches[i];
+            liste->tete->suivant = NULL;
+        } else {
+            taches[i - 1]->suivant = taches[i];
+            taches[i]->suivant = NULL;
+        }
+        if (i == liste->nombreDeTaches - 1) {
+            liste->queue = taches[i];
+        }
+    }
+
+    free(taches);
+}
+
+int comparerTachesParJoursPourTerminer(const void *a, const void *b) {
+    Tache *tacheA = *(Tache **)a;
+    Tache *tacheB = *(Tache **)b;
+    return tacheA->jourPourTerminer - tacheB->jourPourTerminer;
 }
