@@ -77,7 +77,7 @@ void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier)
     liste->nombreDeTaches++;
 
     // Ouvrir le fichier en mode écriture
-    FILE *fichier = fopen(nomFichier, "w");
+    FILE *fichier = fopen(nomFichier, "a");
     if (fichier != NULL)
     {
         // Écrire les tâches dans le fichier
