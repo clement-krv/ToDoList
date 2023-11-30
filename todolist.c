@@ -52,8 +52,10 @@ void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier, char *nomFichier
     int jourPourTerminer;
 
     // Lire chaque tâche du fichier
-    while (fscanf(fichier, "%s\n%ld\n%d\n%d\n", nom, &dateCreation, &statut, &jourPourTerminer) == 4)
+    while (fgets(nom, sizeof(nom), fichier) != NULL && fscanf(fichier, "%ld\n%d\n%d\n", &dateCreation, &statut, &jourPourTerminer) == 3)
     {
+        nom[strcspn(nom, "\n")] = 0; // Supprimer le caractère de nouvelle ligne à la fin
+
         // Créer une nouvelle tâche avec les données lues
         Tache *tache = (Tache *)malloc(sizeof(Tache));
         tache->nom = strdup(nom);
@@ -131,22 +133,7 @@ int comparerTaches(const void *a, const void *b)
     return tacheA->jourPourTerminer - tacheB->jourPourTerminer;
 }
 
-// Fonction qui affiche les tâches
-void afficherTaches(ListeTaches *liste)
-{
-    qsort(liste->taches, liste->nombreDeTaches, sizeof(Tache *), comparerTaches);
 
-    for (int i = 0; i < liste->nombreDeTaches; i++)
-    {
-        Tache *tache = liste->taches[i];
-        printf("Nom: %s\n", tache->nom);
-        printf("Date de creation: %s", ctime(&(tache->dateCreation)));
-        printf("Statut: %s\n", tache->statut == EN_ATTENTE ? "En attente" : tache->statut == EN_COURS ? "En cours"
-                                                                                                      : "Terminee");
-        printf("Jours pour terminer: %d\n", tache->jourPourTerminer);
-        printf("\n");
-    }
-}
 
 // Fonction qui permet de retirer une tâche de la liste de tâches quand son statut est TERMINE
 void retirerTachesTerminees(ListeTaches *liste, char *nomFichier)

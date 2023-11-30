@@ -16,10 +16,9 @@ int main()
     {
         printf("\n===== Menu =====\n");
         printf("1. Ajouter une tache\n");
-        printf("2. Afficher les taches\n");
-        printf("3. Retirer les taches terminees\n");
-        printf("4. Modifier le statut d'une tache\n");
-        printf("5. Quitter\n");
+        printf("2. Retirer les taches terminees\n");
+        printf("3. Modifier le statut d'une tache\n");
+        printf("4. Quitter\n");
         printf("Choisissez une option: ");
 
         int choix;
@@ -33,7 +32,9 @@ int main()
             int joursPourTerminer;
             printf("\n===== Ajouter une tache =====\n");
             printf("Entrez le nom de la tache: ");
-            scanf("%s", nom);
+            scanf("\n"); // Ajouter cette ligne pour consommer le '\n' laissé par scanf précédent
+            fgets(nom, sizeof(nom), stdin);
+            nom[strcspn(nom, "\n")] = 0; // Supprimer le caractère de nouvelle ligne à la fin
             printf("Entrez le nombre de jours pour terminer la tache: ");
             scanf("%d", &joursPourTerminer);
             Tache *tache = creerTache(nom, joursPourTerminer);
@@ -41,26 +42,24 @@ int main()
             break;
         }
         case 2:
-            printf("\n===== Afficher les taches =====\n");
-            afficherTaches(liste);
-            break;
-        case 3:
             printf("\n===== Taches terminees retiree =====\n");
             retirerTachesTerminees(liste, nomFichier);
             break;
-        case 4:
+        case 3:
         {
             char nom[100];
             int nouveauStatut;
             printf("\n===== Modifier le statut d'une tache =====\n");
             printf("Entrez le nom de la tache: ");
-            scanf("%s", nom);
+            scanf("\n"); // Ajouter cette ligne pour consommer le '\n' laissé par scanf précédent
+            fgets(nom, sizeof(nom), stdin);
+            nom[strcspn(nom, "\n")] = 0; // Supprimer le caractère de nouvelle ligne à la fin
             printf("Entrez le nouveau statut de la tache (0 = en attente, 1 = en cours, 2 = terminee): ");
             scanf("%d", &nouveauStatut);
             modifierTache(liste, nom, (StatutTache)nouveauStatut, nomFichier);
             break;
         }
-        case 5:
+        case 4:
             libererListeTaches(liste);
             return 0;
         default:
