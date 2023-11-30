@@ -2,20 +2,20 @@
 
 
 //Fonction qui permet de créer une liste de tâches
-ListeTaches* creerListeTaches() {
+ListeTaches* creerListeTaches(char *nomFichier) {
     ListeTaches* liste = (ListeTaches*)malloc(sizeof(ListeTaches));
     liste->taches = NULL;
     liste->nombreDeTaches = 0;
 
     // Ouvrir le fichier en mode lecture
-    FILE *fichier = fopen("taches.txt", "r");
+    FILE *fichier = fopen(nomFichier, "r");
     if (fichier == NULL) {
         // Si le fichier n'existe pas, retourner la liste vide
         return liste;
     }
 
     // Lire les tâches du fichier
-    lireTachesDepuisFichier(liste, fichier);
+    lireTachesDepuisFichier(liste, fichier, nomFichier);
 
     // Fermer le fichier
     fclose(fichier);
@@ -39,7 +39,7 @@ void trierTachesParDate(ListeTaches *liste) {
     }
 }
 
-void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier) {
+void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier, char *nomFichier) {
     char nom[100];
     long dateCreation;
     int statut;
@@ -55,44 +55,31 @@ void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier) {
         tache->jourPourTerminer = jourPourTerminer;
 
         // Ajouter la tâche à la liste
-        ajouterTache(liste, tache);
+        ajouterTache(liste, tache, nomFichier);
     }
 }
 
 //Fonction qui permet d'ajouter une tâche à la liste de tâches
-void ajouterTache(ListeTaches* liste, Tache* tache) {
-    liste->taches = (Tache**)realloc(liste->taches, (liste->nombreDeTaches + 1) * sizeof(Tache*));
-
-    // Trouver la position d'insertion
-    int pos = 0;
-    while (pos < liste->nombreDeTaches && liste->taches[pos]->dateCreation > tache->dateCreation) {
-        pos++;
-    }
-
-    // Déplacer les tâches suivantes vers le bas de la liste
-    for (int i = liste->nombreDeTaches; i > pos; i--) {
-        liste->taches[i] = liste->taches[i - 1];
-    }
-
-    // Insérer la nouvelle tâche à la bonne position
-    liste->taches[pos] = tache;
+void ajouterTache(ListeTaches *liste, Tache *tache, char *nomFichier) {
+    // Ajouter la tâche à la liste
+    liste->taches = (Tache**)realloc(liste->taches, sizeof(Tache*) * (liste->nombreDeTaches + 1));
+    liste->taches[liste->nombreDeTaches] = tache;
     liste->nombreDeTaches++;
 
-    // Ouvrir le fichier en mode écriture (ce qui efface le contenu existant)
-    FILE *fichier = fopen("taches.txt", "w");
-    if (fichier == NULL) {
-        printf("Erreur d'ouverture du fichier\n");
-        return;
+    // Ouvrir le fichier en mode écriture
+    FILE *fichier = fopen(nomFichier, "w");
+    if (fichier != NULL) {
+        // Écrire les tâches dans le fichier
+        ecrireTachesDansFichier(liste, fichier);
+
+        // Fermer le fichier
+        fclose(fichier);
+    } else {
+        printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
     }
-
-    // Écrire toutes les tâches dans le fichier
-    ecrireTachesDansFichier(liste, fichier);
-
-    // Fermer le fichier
-    fclose(fichier);
 }
 
-void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut) {
+void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut, char *nomFichier) {
     // Trouver la tâche avec le nom donné
     int pos;
     for (pos = 0; pos < liste->nombreDeTaches; pos++) {
@@ -117,7 +104,7 @@ void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut) {
     tache->statut = nouveauStatut;
 
     // Réinsérer la tâche à la bonne position
-    ajouterTache(liste, tache);
+    ajouterTache(liste, tache, nomFichier);
 }
 
 //Fonction qui compare les tâches par rapport a leur nombre de jours pour terminer et les trie en ordre croissant
@@ -142,38 +129,31 @@ void afficherTaches(ListeTaches* liste) {
 }
 
 //Fonction qui permet de retirer une tâche de la liste de tâches quand son statut est TERMINE
-void retirerTachesTerminees(ListeTaches* liste) {
+void retirerTachesTerminees(ListeTaches *liste, char *nomFichier) {
     int i = 0;
     while (i < liste->nombreDeTaches) {
         if (liste->taches[i]->statut == TERMINE) {
-            // Libérer la mémoire de la tâche
-            free(liste->taches[i]->nom);
-            free(liste->taches[i]);
-
-            // Déplacer les tâches restantes vers le haut de la liste
+            // Retirer la tâche de la liste
             for (int j = i; j < liste->nombreDeTaches - 1; j++) {
                 liste->taches[j] = liste->taches[j + 1];
             }
-
-            // Réduire le nombre de tâches
             liste->nombreDeTaches--;
         } else {
             i++;
         }
     }
 
-    // Ouvrir le fichier en mode écriture (ce qui efface le contenu existant)
-    FILE *fichier = fopen("taches.txt", "w");
-    if (fichier == NULL) {
-        printf("Erreur d'ouverture du fichier\n");
-        return;
+    // Ouvrir le fichier en mode écriture
+    FILE *fichier = fopen(nomFichier, "w");
+    if (fichier != NULL) {
+        // Écrire les tâches dans le fichier
+        ecrireTachesDansFichier(liste, fichier);
+
+        // Fermer le fichier
+        fclose(fichier);
+    } else {
+        printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
     }
-
-    // Réécrire toutes les tâches restantes dans le fichier
-    ecrireTachesDansFichier(liste, fichier);
-
-    // Fermer le fichier
-    fclose(fichier);
 }
 
 void ecrireTachesDansFichier(ListeTaches* liste, FILE* fichier) {

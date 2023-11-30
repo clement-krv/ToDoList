@@ -1,9 +1,16 @@
 #include "headers/todolist.h"
 
-//Fonction main qui prend en compte une interface utilisateur pour ajouter des taches, les afficher et les retirer
+// Fonction main qui prend en compte une interface utilisateur pour ajouter des taches, les afficher et les retirer
 int main()
 {
-    ListeTaches *liste = creerListeTaches();
+    char nomUtilisateur[100];
+    printf("Entrez votre nom: ");
+    scanf("%s", nomUtilisateur);
+
+    char nomFichier[150];
+    snprintf(nomFichier, sizeof(nomFichier), "taches/%s.txt", nomUtilisateur);
+
+    ListeTaches *liste = creerListeTaches(nomFichier);
 
     while (1)
     {
@@ -30,8 +37,7 @@ int main()
             printf("Entrez le nombre de jours pour terminer la tache: ");
             scanf("%d", &joursPourTerminer);
             Tache *tache = creerTache(nom, joursPourTerminer);
-            ajouterTache(liste, tache);
-            mettreAJourTaches(liste);
+            ajouterTache(liste, tache, nomFichier);
             break;
         }
         case 2:
@@ -40,7 +46,7 @@ int main()
             break;
         case 3:
             printf("\n===== Taches terminees retiree =====\n");
-            retirerTachesTerminees(liste);
+            retirerTachesTerminees(liste, nomFichier);
             break;
         case 4:
         {
@@ -51,7 +57,7 @@ int main()
             scanf("%s", nom);
             printf("Entrez le nouveau statut de la tache (0 = en attente, 1 = en cours, 2 = terminee): ");
             scanf("%d", &nouveauStatut);
-            modifierTache(liste, nom, nouveauStatut);
+            modifierTache(liste, nom, (StatutTache)nouveauStatut, nomFichier);
             break;
         }
         case 5:
