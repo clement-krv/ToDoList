@@ -42,6 +42,10 @@ void afficherTaches(ListeTaches *liste);
 void retirerTachesTerminees(ListeTaches *liste);
 void mettreAJourTaches(ListeTaches *liste);
 void libererListeTaches(ListeTaches *liste);
+
+void trierTachesParDate(ListeTaches *liste);
+void modifierTache(ListeTaches* liste, char* nom, StatutTache nouveauStatut);
+void lireTachesDepuisFichier(ListeTaches *liste, FILE *fichier);
 Tache *creerTache(char *nom, int joursPourTerminer);
 
 #endif
