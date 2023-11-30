@@ -29,6 +29,14 @@ Une fois que vous avez compilé le projet, vous pouvez l'exécuter en utilisant 
 .\main.exe
 ```
 
+## Analyse
+
+Pour l'utilisation des différentes fonction présente dans ce projet, nous nous sommes aider d'internet , [StackOverflow](https://stackoverflow.com/) ainsi que des IA comme [ChatGPT](https://chat.openai.com) et [Github Copilot](https://copilot.github.com/). En comulant ces différentes sources ainsi que nos connaissances, nous avons pu réaliser ce projet.
+
+## Conclusion
+
+Ce projet nous a permis de mettre en pratique nos connaissances en C et de nous familiariser avec les différents outils de développement. Nous avons également pu découvrir le fonctionnement d'un projet en binôme et les différentes méthodes de travail. 
+
 ## Auteurs
 
 Ce projet a été réalisé par : 
