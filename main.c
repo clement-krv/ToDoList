@@ -10,7 +10,14 @@ int main()
     char nomFichier[150];
     snprintf(nomFichier, sizeof(nomFichier), "taches/%s.txt", nomUtilisateur);
 
-    ListeTaches *liste = creerListeTaches(nomFichier);
+    ListeTaches *liste = creerListeTaches();
+
+    FILE *fichier = fopen(nomFichier, "r");
+    if (fichier != NULL)
+    {
+        lireTachesDepuisFichier(liste, fichier, nomFichier);
+        fclose(fichier);
+    }
 
     while (1)
     {
