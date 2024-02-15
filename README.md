@@ -14,6 +14,32 @@ Ce projet a été réalisé en binôme dans le cadre de nos études à l'[ESGI](
 
 Pour compiler et exécuter ce projet, vous aurez besoin d'un compilateur C. Si vous n'en avez pas déjà un, vous pouvez en télécharger un en ligne.
 
+Ensuite, ouvrez un termianl et dirigez vous dans le dossier où vous voulez cloner le projet et entrez la commande suivante :
+
+```
+git clone https://github.com/clement-krv/ToDoList
+```
+
+## Compilation
+
+Une fois que vous avez un compilateur C installé, vous pouvez compiler le projet en utilisant la commande suivante :
+
+```bash
+gcc -o main.exe .\main.c .\todolist.c
+```
+
+## Exécution
+
+Une fois que vous avez compilé le projet, vous pouvez l'exécuter en utilisant la commande suivante :
+
+```bash
+.\main.exe
+```
+
+## Analyse
+
+Pour l'utilisation des différentes fonction présente dans ce projet, nous nous sommes aider d'internet , [StackOverflow](https://stackoverflow.com/) ainsi que des IA comme [ChatGPT](https://chat.openai.com) et [Github Copilot](https://copilot.github.com/). En comulant ces différentes sources ainsi que nos connaissances, nous avons pu réaliser ce projet.
+
 ## Explication pour quelques exemples de fonctions 
 
 **POUR RETIRER UNE TACHES**
@@ -37,26 +63,6 @@ Elle retourne la différence entre le nombre de jours pour terminer la tâche A 
 Il vérifie si le nombre de jours pour terminer la tâche courante (à l'index i) est inférieur ou égal à 0. Si c'est le cas, il change le statut de la tâche à TERMINE.
 Si le nombre de jours pour terminer n'est pas inférieur ou égal à 0, il vérifie ensuite si le nombre de tâches en cours est inférieur à 5. Si c'est le cas, il change le statut de la tâche à EN_COURS et incrémente le compteur tachesEnCours.
 Si aucune des conditions précédentes n'est remplie, cela signifie que le nombre de jours pour terminer est supérieur à 0 et que le nombre de tâches en cours est égal ou supérieur à 5. Dans ce 
-
-## Compilation
-
-Une fois que vous avez un compilateur C installé, vous pouvez compiler le projet en utilisant la commande suivante :
-
-```bash
-gcc -o main.exe .\main.c .\todolist.c
-```
-
-## Exécution
-
-Une fois que vous avez compilé le projet, vous pouvez l'exécuter en utilisant la commande suivante :
-
-```bash
-.\main.exe
-```
-
-## Analyse
-
-Pour l'utilisation des différentes fonction présente dans ce projet, nous nous sommes aider d'internet , [StackOverflow](https://stackoverflow.com/) ainsi que des IA comme [ChatGPT](https://chat.openai.com) et [Github Copilot](https://copilot.github.com/). En comulant ces différentes sources ainsi que nos connaissances, nous avons pu réaliser ce projet.
 
 ## Conclusion
 
